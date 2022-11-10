@@ -55,5 +55,13 @@ public class PlayerController : MonoBehaviour
     private void ChangeAnimation(int a){
         animator.SetInteger("Estado", a);
     }
+    void OnCollisionEnter2D(Collision2D other)
+    {
+         if(other.gameObject.tag=="piso")
+        {
+           
+            Debug.Log("piso");        
+        }
+    }
 
 }
