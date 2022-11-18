@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     Collider2D cl;
     CapsuleCollider2D cc;
+    public GameObject bala; 
 
     const int ANI_QUIETO = 0;
     const int ANI_CAMINAR = 1;
@@ -162,16 +163,15 @@ public class PlayerController : MonoBehaviour
             dir = -2;
             ChangeAnimation(ANI_CAMINAR);
             rb.velocity = new Vector2(-velocity, rb.velocity.y);
-        }/*
+        }
         else if (Input.GetKeyDown("z"))
         {
-            ChangeAnimation(ANI_ATAQUE);
-            var flechaPosition = transform.position + new Vector3(dir, 0, 0);
-            var gb = Instantiate(flecha, flechaPosition, Quaternion.identity);
-            var controller = gb.GetComponent<FlechaController>();
+            var balaPosition = transform.position + new Vector3(dir, -0.3f, 0);
+            var gb = Instantiate(bala, balaPosition, Quaternion.identity);
+            var controller = gb.GetComponent<BulletController>();
             if (dir == 2) controller.SetRightDirection();
             else controller.SetLeftDirection();
-        }*/
+        }
         else
         {
             rb.velocity = new Vector2(0, rb.velocity.y);

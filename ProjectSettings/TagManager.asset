@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - piso
+  - Bullet
+  - Enemy
   layers:
   - Default
   - TransparentFX
