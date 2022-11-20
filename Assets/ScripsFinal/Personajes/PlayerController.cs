@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
     int ani = 0, cont;
     float dir = 1.2f;
-    bool subir = false, ensuelo = true;
+    bool subir = false;
     float gravedadInicial;
     Vector3 lastCheckpointPosition;
 
