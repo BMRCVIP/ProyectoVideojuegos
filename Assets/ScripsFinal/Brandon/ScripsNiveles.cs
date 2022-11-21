@@ -39,7 +39,6 @@ public class ScripsNiveles : MonoBehaviour
    }
    public void CerrarCreditos(){
          Time.timeScale = 1f;
-         
          menuCreditos.SetActive(false);
          Aparacer();
          }
@@ -57,13 +56,16 @@ public class ScripsNiveles : MonoBehaviour
             SceneManager.LoadScene("Nivel_8");
     }
     public void Nivel2(){
-        Application.LoadLevel("Nivel2");
+        Time.timeScale = 1f;
+          SceneManager.LoadScene("Nivel_2");
     }
     public void Nivel3(){
-        Application.LoadLevel("Nivel3");
+        Time.timeScale = 1f;
+          SceneManager.LoadScene("Nivel_3");
     }
     public void Nivel4(){
-        Application.LoadLevel("Nivel4");
+        Time.timeScale = 1f;
+          SceneManager.LoadScene("Nivel_10");
     }
 }
 
