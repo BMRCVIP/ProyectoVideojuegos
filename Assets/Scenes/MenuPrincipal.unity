@@ -924,8 +924,8 @@ GameObject:
   - component: {fileID: 1490464603}
   - component: {fileID: 1490464605}
   - component: {fileID: 1490464604}
-  - component: {fileID: 1490464606}
   - component: {fileID: 1490464607}
+  - component: {fileID: 1490464606}
   m_Layer: 5
   m_Name: BJugar
   m_TagString: Untagged
