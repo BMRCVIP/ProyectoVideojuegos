@@ -9,6 +9,12 @@ TagManager:
   - Enemy
   - Limites
   - JetPack
+  - Vida
+  - Moneda
+  - Triple
+  - TP
+  - Escalera
+  - CheckPoint
   layers:
   - Default
   - TransparentFX

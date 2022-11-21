@@ -80,9 +80,9 @@ public class PersonajeNivel3 : MonoBehaviour
         }
         else
         {
-            ChangeAnimation(ANI_OTHER);
             rb.velocity = new Vector2(0, rb.velocity.y);
             ChangeAnimation(ANI_QUIETO);
+            ChangeAnimation(ANI_OTHER);
         }
         if (Input.GetKeyDown(KeyCode.Space) && cont > 0)
         {
