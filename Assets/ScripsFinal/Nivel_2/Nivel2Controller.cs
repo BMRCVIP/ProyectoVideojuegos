@@ -6,35 +6,20 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
-public class Nivel10Controller : MonoBehaviour
+public class Nivel2Controller : MonoBehaviour
 {
     public Text scoreText;
     public Text livesText;
-    public Text timeText;
     private int score = 0;
     private int lives = 3;
-    public float countdown = 40.0f;
-    public bool inicio = false;
-    public bool bonus = false;
-
     void Start()
     {
-
+        
     }
+
     void Update()
     {
-        PrintTimeInScreen();
-        if (inicio)
-        {
-            if (countdown >= 0.0f) countdown -= Time.deltaTime;
-            else
-            {
-                SceneManager.LoadScene(2);  //Volver al nivel regular
-                Debug.Log("Perdiste");
-            }
-        }
-
+        
     }
 
     public void SaveGame()
@@ -52,13 +37,11 @@ public class Nivel10Controller : MonoBehaviour
         GameData data = new GameData();
         data.Score = score;
         data.Live = lives;
-        data.Bonus = bonus;
 
         BinaryFormatter bf = new BinaryFormatter();
         bf.Serialize(file, data);
         file.Close();
     }
-
     public void LoadGame()
     {
         var filePath = Application.persistentDataPath + "/guardar.dat";
@@ -79,7 +62,6 @@ public class Nivel10Controller : MonoBehaviour
         //usar datos guardados
         score = data.Score;
         lives = data.Live;
-        bonus = data.Bonus;
 
         GanarPuntos(0);
     }
@@ -127,8 +109,5 @@ public class Nivel10Controller : MonoBehaviour
     {
         livesText.text = "Vidas: " + lives;
     }
-    public void PrintTimeInScreen()
-    {
-        timeText.text = "Tiempo: " + countdown;
-    }
 }
+

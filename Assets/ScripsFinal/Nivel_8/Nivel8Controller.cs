@@ -111,12 +111,12 @@ public class Nivel8Controller : MonoBehaviour
     }
     public void MasSaltos()
     {
-        saltoTriple += 1;
+        saltoTriple ++;
         PrintSaltoInScreen();
     }
     public void MenosSaltos()
     {
-        saltoTriple -= 1;
+        saltoTriple --;
         PrintSaltoInScreen();
     }
     public void PrintScoreInScreen()

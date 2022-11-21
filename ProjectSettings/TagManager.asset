@@ -15,6 +15,7 @@ TagManager:
   - TP
   - Escalera
   - CheckPoint
+  - Barrera
   layers:
   - Default
   - TransparentFX
