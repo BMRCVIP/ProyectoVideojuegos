@@ -237,7 +237,7 @@ public class PersonajeNivel8 : MonoBehaviour
         {
             gameManager.bonus = true;
             gameManager.SaveGame();
-            //SceneManager.LoadScene(3);  //Cambia al Nivel Bonus
+            SceneManager.LoadScene(3);  //Cambia al Nivel Bonus
             lastCheckpointPosition = transform.position;
             irBonus.GetComponent<Collider2D>().enabled = false;
             irBonus.GetComponent<SpriteRenderer>().enabled = false;

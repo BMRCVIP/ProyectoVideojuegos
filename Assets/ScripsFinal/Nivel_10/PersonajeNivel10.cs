@@ -171,7 +171,7 @@ public class PersonajeNivel10 : MonoBehaviour
         }
         if (other.gameObject.tag == "TP")
         {
-            //SceneManager.LoadScene(3);  //Cambia al Nivel Bonus
+            SceneManager.LoadScene(2);  //Cambia al Nivel Bonus
             gameManager.SaveGame();
             Debug.Log("Ganaste las monedas");
         }
