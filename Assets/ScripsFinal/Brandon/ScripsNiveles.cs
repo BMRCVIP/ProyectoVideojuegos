@@ -7,11 +7,19 @@ public class ScripsNiveles : MonoBehaviour
 {
     [SerializeField] private GameObject menuCreditos;
     [SerializeField] private GameObject menuNiveles;
+    [SerializeField] private GameObject menuPrincipal;
+    [SerializeField] private GameObject btnRunnerExplorer;
     [SerializeField] private GameObject btnNivel;
     [SerializeField] private GameObject btnJugarO;
     [SerializeField] private GameObject btnOpcionesO;
     [SerializeField] private GameObject btnCreditosO;
     [SerializeField] private GameObject btnSalirO;
+
+    public void AbrirMenu(){
+         Time.timeScale = 1f;
+         menuPrincipal.SetActive(true);
+         btnRunnerExplorer.SetActive(false);
+   }
 
     public void AbrirNiveles(){
          Time.timeScale = 0f;
@@ -22,6 +30,7 @@ public class ScripsNiveles : MonoBehaviour
          btnCreditosO.SetActive(false);
          btnSalirO.SetActive(false);
    }
+
    public void CerrarNiveles(){
          Time.timeScale = 1f;
          menuNiveles.SetActive(false);
