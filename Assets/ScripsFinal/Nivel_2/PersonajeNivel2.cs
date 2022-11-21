@@ -1,19 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using UnityEngine.SceneManagement;
-using TMPro;
-using UnityEngine.UI;
 
-public class PersonajeNivel10 : MonoBehaviour
+public class PersonajeNivel2 : MonoBehaviour
 {
-    public int velocity = 4, veloCorrer = 8, velSalto = 5, salto = 2;
+    public int velocity = 4, veloCorrer = 8, velSalto = 5, salto = 3;
     Rigidbody2D rb;
     SpriteRenderer sr;
     Animator animator;
     Collider2D cl;
-    public GameObject Camara;
+    CapsuleCollider2D cc;
+    public GameObject bala;
+    public GameObject fuegoBala;
 
     const int ANI_QUIETO = 0;
     const int ANI_CAMINAR = 1;
@@ -24,73 +22,46 @@ public class PersonajeNivel10 : MonoBehaviour
     const int ANI_TREPAR = 6;
     const int ANI_DANIO = 7;
     const int ANI_MUERTO = 8;
-
-    int cont;
-    Vector3 lastCheckpointPosition = new Vector3(-77, -7, 0);
-
-    private Nivel10Controller gameManager;
-
+    const int ANI_GUN = 11;
+    const int ANI_OTHER = 12;
+    int ani = 0, cont;
+    float dir = 1.2f;
+    float gravedadInicial;
+    Vector3 lastCheckpointPosition;
+    private Nivel2Controller gameManager;
     void Start()
     {
         cont = salto;
-        gameManager = FindObjectOfType<Nivel10Controller>();
+        gameManager = FindObjectOfType<Nivel2Controller>();
         gameManager.LoadGame();
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         cl = GetComponent<Collider2D>();
-        Camara.transform.position = new Vector3(-4.5f, -4, -10);
+        cc = GetComponent<CapsuleCollider2D>();
+        gravedadInicial = rb.gravityScale;  
     }
-
-    // Update is called once per frame
     void Update()
     {
-
-        if (gameManager.inicio)
+        if (ani == 0)
         {
-            MoverCamara();
-            Movimientos();  
-            if (Input.GetKey("r"))
+            if (Input.GetKeyDown("z"))
             {
-                gameManager.ReiniciarSave();
-                gameManager.LoadGame();
+                ChangeAnimation(ANI_ATAQUE);
+            }
+            else
+            {
+                Movimientos();
             }
         }
-        else
-        {
-            if (transform.position.x >= -7.5f) gameManager.inicio = true;
-            ChangeAnimation(ANI_CAMINAR);
-            rb.velocity = new Vector2(1.8f, rb.velocity.y);
+        else if (ani == 3){
+            ChangeAnimation(ANI_GUN);
+            Gun();
         }
 
 
-    }
-    void MoverCamara()
-    {
-        if (transform.position.y <= 4.5f)
-        {
-            if (transform.position.y <= -4)
-            {
-                Camara.transform.position = new Vector3(Camara.transform.position.x, -4, -10);
-            }
-            else Camara.transform.position = new Vector3(Camara.transform.position.x, transform.position.y, -10);
-        }
-        else
-        {
-            Camara.transform.position = new Vector3(Camara.transform.position.x, 4.5f, -10);
-        }
-        if (transform.position.x <= 12)
-        {
-            if (transform.position.x <= -4.5f)
-            {
-                Camara.transform.position = new Vector3(-4.5f, Camara.transform.position.y, -10);
-            }
-            else Camara.transform.position = new Vector3(transform.position.x, Camara.transform.position.y, -10);
-        }
-        else
-        {
-            Camara.transform.position = new Vector3(12, Camara.transform.position.y, -10);
-        }
+        
+
     }
 
     void Movimientos()
@@ -98,6 +69,7 @@ public class PersonajeNivel10 : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow))
         {
             sr.flipX = false;
+            dir = 2;
 
             if (Input.GetKey("x"))
             {
@@ -122,6 +94,7 @@ public class PersonajeNivel10 : MonoBehaviour
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             sr.flipX = true;
+            dir = -2;
 
             if (Input.GetKey("x"))
             {
@@ -154,11 +127,63 @@ public class PersonajeNivel10 : MonoBehaviour
             cont--;
         }
     }
-
+    void Gun()
+    {
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            sr.flipX = false;
+            dir = 1.2f;
+            ChangeAnimation(ANI_CAMINAR);
+            rb.velocity = new Vector2(velocity, rb.velocity.y);
+        }
+        else if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            sr.flipX = true;
+            dir = -1.2f;
+            ChangeAnimation(ANI_CAMINAR);
+            rb.velocity = new Vector2(-velocity, rb.velocity.y);
+        }
+        else if (Input.GetKeyDown("z"))
+        {
+            var fuegoPosition = transform.position + new Vector3(dir, -0.28f, 0);
+            var qw = Instantiate(fuegoBala, fuegoPosition, Quaternion.identity);
+            var balaPosition = transform.position + new Vector3(dir, -0.28f, 0);
+            var gb = Instantiate(bala, balaPosition, Quaternion.identity);
+            var controller = gb.GetComponent<BulletController>();
+            if (dir == 1.2f) controller.SetRightDirection();
+            else controller.SetLeftDirection();
+        }
+        else
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+            ChangeAnimation(ANI_QUIETO);
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && cont > 0)
+        {
+            rb.AddForce(new Vector2(0, velSalto), ForceMode2D.Impulse);
+            ChangeAnimation(ANI_SALTO);
+            cont--;
+        }
+    }
     void OnCollisionEnter2D(Collision2D other)
     {
         cont = salto;
 
+        if (other.gameObject.tag == "Limites")
+        {
+            if (lastCheckpointPosition != null)
+            {
+                transform.position = lastCheckpointPosition;
+            }
+        }
+        if (other.gameObject.tag == "Enemy")
+        {
+            if (lastCheckpointPosition != null)
+            {
+                transform.position = lastCheckpointPosition;
+            }
+            gameManager.PerderVida();
+        }
         if (other.gameObject.tag == "Moneda")
         {
             gameManager.GanarPuntos(1);
@@ -169,16 +194,18 @@ public class PersonajeNivel10 : MonoBehaviour
             gameManager.GanarVida();
             Destroy(other.gameObject);
         }
-        if (other.gameObject.tag == "TP")
+    }
+    void OnTriggerEnter2D(Collider2D other)//para reconocer el checkponit(transparente)
+    {
+        if (other.gameObject.tag == "CheckPoint")
         {
-            SceneManager.LoadScene(2);  //Cambia al Nivel Bonus
-            gameManager.SaveGame();
-            Debug.Log("Ganaste las monedas");
+            Debug.Log("CheckPoint");//aplicar la pocion isTrigger en la configuracion
+            lastCheckpointPosition = transform.position;
+            other.GetComponent<Collider2D>().enabled = false;
         }
     }
     private void ChangeAnimation(int a)
     {
         animator.SetInteger("Estado", a);
     }
-
 }

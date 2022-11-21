@@ -14,7 +14,6 @@ public class CamaraScroll : MonoBehaviour
     void Start()
     {
         rb.velocity = new Vector2(Nivel3Controller.instance.scrollSpeed, 0);
-        Debug.Log(Nivel3Controller.instance.scrollSpeed);
         //rb.velocity = Vector2.left * Nivel3Controller.instance.scrollSpeed;
     }
 
