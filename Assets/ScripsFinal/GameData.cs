@@ -8,4 +8,5 @@ public class GameData
     public int Score {get;set;}
     public int Live {get;set;}
     public bool Bonus {get;set;}
+    public int SaltoTriple {get;set;}
 }

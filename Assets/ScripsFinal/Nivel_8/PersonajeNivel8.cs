@@ -78,6 +78,10 @@ public class PersonajeNivel8 : MonoBehaviour
             gameManager.ReiniciarSave();
             gameManager.LoadGame();
         }
+        if(gameManager.saltoTriple>0){
+            salto = 3;
+        }
+        else salto = 2;
     }
     void MoverCamara()
     {
@@ -182,10 +186,15 @@ public class PersonajeNivel8 : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space) && cont > 0)
         {
+            Debug.Log(gameManager.saltoTriple + "-" + cont);
+            if(gameManager.saltoTriple > 0 && cont == 0){
+                gameManager.MenosSaltos();
+            }
             rb.AddForce(new Vector2(0, velSalto), ForceMode2D.Impulse);
             ChangeAnimation(ANI_SALTO);
             cont--;
         }
+        if(onLadder) ChangeAnimation(ANI_TREPAR);
     }
 
     void OnCollisionEnter2D(Collision2D other)
@@ -216,6 +225,12 @@ public class PersonajeNivel8 : MonoBehaviour
         if (other.gameObject.tag == "Vida")
         {
             gameManager.GanarVida();
+            Destroy(other.gameObject);
+        }
+        if (other.gameObject.tag == "Triple")
+        {
+            gameManager.MasSaltos();
+            gameManager.PrintSaltoInScreen();
             Destroy(other.gameObject);
         }
         if (other.gameObject.name == "Shield")
@@ -249,7 +264,6 @@ public class PersonajeNivel8 : MonoBehaviour
     {
         if (other.CompareTag("Escalera"))
         {
-            Debug.Log("tmre");
             if (Input.GetAxisRaw("Vertical") != 0)
             {
                 rb.velocity = new Vector2(rb.velocity.x, Input.GetAxisRaw("Vertical") * climbSpeed);

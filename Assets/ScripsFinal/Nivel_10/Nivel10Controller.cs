@@ -7,19 +7,33 @@ using TMPro;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public class Nivel8Controller : MonoBehaviour
+public class Nivel10Controller : MonoBehaviour
 {
-
     public Text scoreText;
     public Text livesText;
-    public Text saltosText;
+    public Text timeText;
     private int score = 0;
     private int lives = 3;
+    public float countdown = 40.0f;
+    public bool inicio = false;
     public bool bonus = false;
-    public int saltoTriple = 0;
 
     void Start()
     {
+
+    }
+    void Update()
+    {
+        PrintTimeInScreen();
+        if (inicio)
+        {
+            if (countdown >= 0.0f) countdown -= Time.deltaTime;
+            else
+            {
+                //SceneManager.LoadScene(3);  //Volver al nivel regular
+                Debug.Log("Perdiste");
+            }
+        }
 
     }
 
@@ -28,7 +42,7 @@ public class Nivel8Controller : MonoBehaviour
         var filePath = Application.persistentDataPath + "/guardar.dat";
         FileStream file;
 
-        Debug.Log("File.Exists(filePath)"+ File.Exists(filePath)    );
+        Debug.Log("File.Exists(filePath)" + File.Exists(filePath));
 
         if (File.Exists(filePath))
             file = File.OpenWrite(filePath);
@@ -39,7 +53,6 @@ public class Nivel8Controller : MonoBehaviour
         data.Score = score;
         data.Live = lives;
         data.Bonus = bonus;
-        data.SaltoTriple = saltoTriple;
 
         BinaryFormatter bf = new BinaryFormatter();
         bf.Serialize(file, data);
@@ -67,7 +80,6 @@ public class Nivel8Controller : MonoBehaviour
         score = data.Score;
         lives = data.Live;
         bonus = data.Bonus;
-        saltoTriple = data.SaltoTriple;
 
         GanarPuntos(0);
     }
@@ -85,7 +97,6 @@ public class Nivel8Controller : MonoBehaviour
         data.Score = 0;
         data.Live = 3;
         data.Bonus = false;
-        data.SaltoTriple = 0;
 
         BinaryFormatter bf = new BinaryFormatter();
         bf.Serialize(file, data);
@@ -97,7 +108,6 @@ public class Nivel8Controller : MonoBehaviour
         score += puntos;
         PrintLivesInScreen();
         PrintScoreInScreen();
-        PrintSaltoInScreen();
     }
     public void PerderVida()
     {
@@ -109,16 +119,6 @@ public class Nivel8Controller : MonoBehaviour
         lives += 1;
         PrintLivesInScreen();
     }
-    public void MasSaltos()
-    {
-        saltoTriple += 1;
-        PrintSaltoInScreen();
-    }
-    public void MenosSaltos()
-    {
-        saltoTriple -= 1;
-        PrintSaltoInScreen();
-    }
     public void PrintScoreInScreen()
     {
         scoreText.text = "Puntaje: " + score;
@@ -127,8 +127,8 @@ public class Nivel8Controller : MonoBehaviour
     {
         livesText.text = "Vidas: " + lives;
     }
-    public void PrintSaltoInScreen()
+    public void PrintTimeInScreen()
     {
-        saltosText.text = "Saltos Triples: " + saltoTriple;
+        timeText.text = "Tiempo: " + countdown;
     }
 }
