@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     Collider2D cl;
     CapsuleCollider2D cc;
+    public GameObject bala;
+    public GameObject fuegoBala;
 
     const int ANI_QUIETO = 0;
     const int ANI_CAMINAR = 1;
@@ -26,8 +28,9 @@ public class PlayerController : MonoBehaviour
     const int ANI_GUN = 11;
     const int ANI_OTHER = 12;
 
-    int ani = 0, dir = 2, cont;
-    bool subir = false, ensuelo = true;
+    int ani = 0, cont;
+    float dir = 1.2f;
+    bool subir = false;
     float gravedadInicial;
     Vector3 lastCheckpointPosition;
 
@@ -46,7 +49,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ani == 0) Movimientos();
+        if (ani == 0)
+        {
+            if (Input.GetKeyDown("z"))
+            {
+                ChangeAnimation(ANI_ATAQUE);
+            }
+            else
+            {
+                Movimientos();
+            }
+        }
         else if (ani == 1 || ani == 2) Libre();
         else if (ani == 3) Gun();
 
@@ -124,16 +137,7 @@ public class PlayerController : MonoBehaviour
                 ChangeAnimation(ANI_CAMINAR);
                 rb.velocity = new Vector2(-velocity, rb.velocity.y);
             }
-        }/*
-        else if (Input.GetKeyDown("z"))
-        {
-            ChangeAnimation(ANI_ATAQUE);
-            var flechaPosition = transform.position + new Vector3(dir, 0, 0);
-            var gb = Instantiate(flecha, flechaPosition, Quaternion.identity);
-            var controller = gb.GetComponent<FlechaController>();
-            if (dir == 2) controller.SetRightDirection();
-            else controller.SetLeftDirection();
-        }*/
+        }
         else
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
@@ -152,48 +156,51 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow))
         {
             sr.flipX = false;
-            dir = 2;
+            dir = 1.2f;
             ChangeAnimation(ANI_CAMINAR);
             rb.velocity = new Vector2(velocity, rb.velocity.y);
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             sr.flipX = true;
-            dir = -2;
+            dir = -1.2f;
             ChangeAnimation(ANI_CAMINAR);
             rb.velocity = new Vector2(-velocity, rb.velocity.y);
-        }/*
+        }
         else if (Input.GetKeyDown("z"))
         {
-            ChangeAnimation(ANI_ATAQUE);
-            var flechaPosition = transform.position + new Vector3(dir, 0, 0);
-            var gb = Instantiate(flecha, flechaPosition, Quaternion.identity);
-            var controller = gb.GetComponent<FlechaController>();
-            if (dir == 2) controller.SetRightDirection();
+            var fuegoPosition = transform.position + new Vector3(dir, -0.28f, 0);
+            var qw = Instantiate(fuegoBala, fuegoPosition, Quaternion.identity);
+            var balaPosition = transform.position + new Vector3(dir, -0.28f, 0);
+            var gb = Instantiate(bala, balaPosition, Quaternion.identity);
+            var controller = gb.GetComponent<BulletController>();
+            if (dir == 1.2f) controller.SetRightDirection();
             else controller.SetLeftDirection();
-        }*/
+        }
         else
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
             ChangeAnimation(ANI_QUIETO);
         }
-    }  
-    void Libre(){
-        
+    }
+    void Libre()
+    {
+
         rb.velocity = new Vector2(0, rb.velocity.y);
         if (Input.GetKey(KeyCode.RightArrow))
         {
             sr.flipX = false;
-            dir = 2;
+            dir = 1.2f;
             rb.velocity = new Vector2(velocity, rb.velocity.y);
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             sr.flipX = true;
-            dir = -2;
+            dir = -1.2f;
             rb.velocity = new Vector2(-velocity, rb.velocity.y);
         }
-        if(Input.GetKeyDown(KeyCode.Space)){
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             rb.AddForce(new Vector2(0, velSalto), ForceMode2D.Impulse);
         }
 
