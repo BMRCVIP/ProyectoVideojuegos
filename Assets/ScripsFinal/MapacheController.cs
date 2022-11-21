@@ -45,7 +45,7 @@ public class MapacheController : MonoBehaviour
             rb.velocity = new Vector2(0, rb.velocity.y);
             ChangeAnimation(ANI_QUIETO);
         }
-        if(Input.GetKeyDown(KeyCode.Space) && cont>0){
+        if(Input.GetKeyDown(KeyCode.Space)){
             rb.AddForce(new Vector2(0, velSalto), ForceMode2D.Impulse);
             ChangeAnimation(ANI_SALTO);
             cont--;
