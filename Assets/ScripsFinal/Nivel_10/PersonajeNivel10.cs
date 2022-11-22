@@ -9,6 +9,10 @@ using UnityEngine.UI;
 public class PersonajeNivel10 : MonoBehaviour
 {
     public int velocity = 4, veloCorrer = 8, velSalto = 5, salto = 2;
+    //Audios
+    public AudioClip jumpClip;
+    public AudioClip coinClip;
+    AudioSource audioSource;
     Rigidbody2D rb;
     SpriteRenderer sr;
     Animator animator;
@@ -39,6 +43,7 @@ public class PersonajeNivel10 : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         cl = GetComponent<Collider2D>();
+        audioSource = GetComponent<AudioSource>();
         Camara.transform.position = new Vector3(-4.5f, -4, -10);
     }
 
@@ -149,6 +154,7 @@ public class PersonajeNivel10 : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space) && cont > 0)
         {
+            audioSource.PlayOneShot(jumpClip);
             rb.AddForce(new Vector2(0, velSalto), ForceMode2D.Impulse);
             ChangeAnimation(ANI_SALTO);
             cont--;
@@ -161,6 +167,7 @@ public class PersonajeNivel10 : MonoBehaviour
 
         if (other.gameObject.tag == "Moneda")
         {
+            audioSource.PlayOneShot(coinClip);
             gameManager.GanarPuntos(1);
             Destroy(other.gameObject);
         }
@@ -171,7 +178,7 @@ public class PersonajeNivel10 : MonoBehaviour
         }
         if (other.gameObject.tag == "TP")
         {
-            SceneManager.LoadScene(2);  //Cambia al Nivel Bonus
+            SceneManager.LoadScene(1);  //Cambia al Nivel Bonus
             gameManager.SaveGame();
             Debug.Log("Ganaste las monedas");
         }

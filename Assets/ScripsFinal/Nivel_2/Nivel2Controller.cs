@@ -10,7 +10,7 @@ public class Nivel2Controller : MonoBehaviour
 {
     public Text scoreText;
     public Text livesText;
-    private int score = 0;
+    public int score = 0;
     private int lives = 3;
     void Start()
     {

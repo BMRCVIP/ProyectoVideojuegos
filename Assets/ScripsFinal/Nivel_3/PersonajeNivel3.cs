@@ -7,7 +7,10 @@ using UnityEngine.UI;
 
 public class PersonajeNivel3 : MonoBehaviour
 {
-    public int velocity = 8, velSalto = 5, salto = 3;
+    public int velocity = 8, velSalto = 5, salto = 3;    //Audios
+    public AudioClip jumpClip;
+    public AudioClip deadClip;
+    AudioSource audioSource;
     Rigidbody2D rb;
     SpriteRenderer sr;
     Animator animator;
@@ -41,6 +44,7 @@ public class PersonajeNivel3 : MonoBehaviour
         animator = GetComponent<Animator>();
         cl = GetComponent<Collider2D>();
         gameManager.LoadGame();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -128,6 +132,7 @@ public class PersonajeNivel3 : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space) && cont > 0)
         {
+            audioSource.PlayOneShot(jumpClip);
             rb.AddForce(new Vector2(0, velSalto), ForceMode2D.Impulse);
             ChangeAnimation(ANI_SALTO);
             cont--;
@@ -163,6 +168,7 @@ public class PersonajeNivel3 : MonoBehaviour
 
         if (other.gameObject.tag == "Enemy" || other.gameObject.tag == "Limites")
         {
+            audioSource.PlayOneShot(deadClip);
             if (other.gameObject.name == "Abajo") ani = 2;
             else ani = 3;
             gameManager.PerderVida();
@@ -173,11 +179,15 @@ public class PersonajeNivel3 : MonoBehaviour
             QuitarJetPack();
             Destroy(other.gameObject);
             if (other.gameObject.name == "Flag") gameManager.check = 1;
-            else if (other.gameObject.name == "Flag2") gameManager.check = 2;
+            else if (other.gameObject.name == "Flag2")
+            {
+                
+                gameManager.check = 2;
+            }
         }
         if (other.gameObject.tag == "TP")
         {
-            SceneManager.LoadScene(2);  //Volver al nivel regular
+            SceneManager.LoadScene(5);  //Volver al nivel regular
         }
     }
     void OnTriggerEnter2D(Collider2D other)//para reconocer el checkponit(transparente)

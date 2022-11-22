@@ -57,7 +57,11 @@ public class Nivel3Controller : MonoBehaviour
             else if (check == 2)
             {
                 Limite.transform.position = new Vector3(126.4f, 0.5f, 0);
-                Debug.Log("Pos2: " + PerX);
+                Camara.transform.position = new Vector3(215, 0, -10);
+            }
+            if (check == 2)
+            {
+                Limite.transform.position = new Vector3(126.4f, 0.5f, 0);
                 Camara.transform.position = new Vector3(215, 0, -10);
             }
 

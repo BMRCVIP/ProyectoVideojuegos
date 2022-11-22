@@ -30,7 +30,7 @@ public class Nivel10Controller : MonoBehaviour
             if (countdown >= 0.0f) countdown -= Time.deltaTime;
             else
             {
-                SceneManager.LoadScene(2);  //Volver al nivel regular
+                SceneManager.LoadScene(1);  //Volver al nivel regular
                 Debug.Log("Perdiste");
             }
         }

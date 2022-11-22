@@ -10,14 +10,14 @@ public class EsqueletoController : MonoBehaviour
     Animator animator;
 
     private int ani = 1;
-    private float time = 1.5f;
+    private float time = 0.5f;
     private float cont = 0.0f;
 
     const int ANI_QUIETO = 0;
     const int ANI_CAMINAR = 1;
     const int ANI_ATAQUE = 2;
     const int ANI_MUERTO = 3;
-    float dir = 1.2f;
+    float dir = -1.2f;
     public GameObject golpe;
     void Start()
     {
@@ -85,8 +85,8 @@ public class EsqueletoController : MonoBehaviour
     {
         if (other.gameObject.tag == "Bullet")
         {
-            Destroy(other.gameObject);
-            Destroy(this.gameObject);
+            cont = 0.0f;
+            ani = 3;
         }
     }
     private void ChangeAnimation(int a)

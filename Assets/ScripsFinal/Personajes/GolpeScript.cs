@@ -18,13 +18,13 @@ public class GolpeScript : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D> ();
-        Destroy(this.gameObject, 1);
+        Destroy(this.gameObject, 0.5f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        rb.velocity = new Vector2(velocity, 0);
+        rb.velocity = new Vector2(0, 0);
     }
     void OnCollisionEnter2D(Collision2D other)
     {

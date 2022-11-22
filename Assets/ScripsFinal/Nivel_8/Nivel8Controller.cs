@@ -14,7 +14,7 @@ public class Nivel8Controller : MonoBehaviour
     public Text livesText;
     public Text saltosText;
     private int score = 0;
-    private int lives = 3;
+    public int lives = 3;
     public bool bonus = false;
     public int saltoTriple = 0;
 

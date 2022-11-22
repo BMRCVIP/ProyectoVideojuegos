@@ -8,6 +8,13 @@ using UnityEngine.UI;
 public class PersonajeNivel2 : MonoBehaviour
 {
     public int velocity = 4, veloCorrer = 8, velSalto = 5, salto = 3;
+    //Audios
+    public AudioClip jumpClip;
+    public AudioClip deadClip;
+    public AudioClip shootClip;
+    public AudioClip coinClip;
+    public AudioClip AttackClip;
+    AudioSource audioSource;
     Rigidbody2D rb;
     SpriteRenderer sr;
     Animator animator;
@@ -30,7 +37,9 @@ public class PersonajeNivel2 : MonoBehaviour
     const int ANI_OTHER = 12;
     int ani = 0, cont;
     float dir = 1.2f;
+    float tiempoataque = 0.5f, time = 0;
     float gravedadInicial;
+    bool darGolpe = false;
     Vector3 lastCheckpointPosition;
     private Nivel2Controller gameManager;
     void Start()
@@ -43,30 +52,31 @@ public class PersonajeNivel2 : MonoBehaviour
         animator = GetComponent<Animator>();
         cl = GetComponent<Collider2D>();
         cc = GetComponent<CapsuleCollider2D>();
-        gravedadInicial = rb.gravityScale;  
+        audioSource = GetComponent<AudioSource>();
     }
     void Update()
     {
-        if (ani == 0)
+        if (gameManager.score >= 50)
         {
-            if (Input.GetKeyDown("z"))
-            {
-                ChangeAnimation(ANI_ATAQUE);
-                Golpe();
-            }
-            else
-            {
-                Movimientos();
-            }
+            ani = 3;
         }
-        else if (ani == 3){
+        if (ani == 0) Movimientos();
+        else if (ani == 3)
+        {
             ChangeAnimation(ANI_GUN);
             Gun();
         }
-
-
-        
-
+        Debug.Log(darGolpe);
+        if (darGolpe)
+        {
+            time += Time.deltaTime;
+            if (time >= tiempoataque) Golpe();
+        }
+        if (Input.GetKey("r"))
+        {
+            gameManager.ReiniciarSave();
+            gameManager.LoadGame();
+        }
     }
 
     void Movimientos()
@@ -127,15 +137,25 @@ public class PersonajeNivel2 : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space) && cont > 0)
         {
+            audioSource.PlayOneShot(jumpClip);
             rb.AddForce(new Vector2(0, velSalto), ForceMode2D.Impulse);
             ChangeAnimation(ANI_SALTO);
             cont--;
         }
+        if (Input.GetKeyDown("z"))
+        {
+            ChangeAnimation(ANI_ATAQUE);
+            darGolpe = true;
+        }
     }
-    void Golpe(){
+    void Golpe()
+    {
+        time = 0;
+        audioSource.PlayOneShot(AttackClip);
         var golpePosition = transform.position + new Vector3(dir, -0.28f, 0);
         var gb = Instantiate(golpe, golpePosition, Quaternion.identity);
         var controller = gb.GetComponent<GolpeScript>();
+        darGolpe = false;
     }
     void Gun()
     {
@@ -155,6 +175,7 @@ public class PersonajeNivel2 : MonoBehaviour
         }
         else if (Input.GetKeyDown("z"))
         {
+            audioSource.PlayOneShot(shootClip);
             var fuegoPosition = transform.position + new Vector3(dir, -0.28f, 0);
             var qw = Instantiate(fuegoBala, fuegoPosition, Quaternion.identity);
             var balaPosition = transform.position + new Vector3(dir, -0.28f, 0);
@@ -196,6 +217,7 @@ public class PersonajeNivel2 : MonoBehaviour
         }
         if (other.gameObject.tag == "Moneda")
         {
+            audioSource.PlayOneShot(coinClip);
             gameManager.GanarPuntos(1);
             Destroy(other.gameObject);
         }
@@ -211,6 +233,14 @@ public class PersonajeNivel2 : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D other)//para reconocer el checkponit(transparente)
     {
+        if (other.gameObject.tag == "Enemy")
+        {
+            if (lastCheckpointPosition != null)
+            {
+                transform.position = lastCheckpointPosition;
+            }
+            gameManager.PerderVida();
+        }
         if (other.gameObject.tag == "CheckPoint")
         {
             Debug.Log("CheckPoint");//aplicar la pocion isTrigger en la configuracion

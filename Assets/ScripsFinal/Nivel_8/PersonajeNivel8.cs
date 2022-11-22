@@ -9,6 +9,11 @@ using UnityEngine.UI;
 public class PersonajeNivel8 : MonoBehaviour
 {
     public int velocity = 4, veloCorrer = 8, velSalto = 5, salto = 2;
+    //Audios
+    public AudioClip jumpClip;
+    public AudioClip deadClip;
+    public AudioClip coinClip;
+    AudioSource audioSource;
     Rigidbody2D rb;
     SpriteRenderer sr;
     Animator animator;
@@ -34,6 +39,7 @@ public class PersonajeNivel8 : MonoBehaviour
     const int ANI_MUERTO = 8;
 
     int ani = 0, cont;
+    float timemuerto = 1.5f, timeEnd = 0;
     Vector3 lastCheckpointPosition = new Vector3(-77, -7, 0);
 
     private Nivel8Controller gameManager;
@@ -47,6 +53,7 @@ public class PersonajeNivel8 : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         cl = GetComponent<Collider2D>();
+        audioSource = GetComponent<AudioSource>();
         Camara.transform.position = new Vector3(-68, -4, -10);
         if (gameManager.bonus)
         {
@@ -64,14 +71,21 @@ public class PersonajeNivel8 : MonoBehaviour
 
         if (ani == 0)
         {
-            if (Input.GetKeyDown("z"))
+            Movimientos();
+        }
+        else if (ani == 3)
+        {
+            if (gameManager.lives <= 0)
             {
-                ChangeAnimation(ANI_ATAQUE);
+                ChangeAnimation(ANI_MUERTO);
             }
             else
             {
-                Movimientos();
+                ChangeAnimation(ANI_DANIO);
             }
+            rb.velocity = new Vector2(0, 0);
+            timeEnd += Time.deltaTime;
+            if (timeEnd >= timemuerto) Muerte();
         }
         if (Input.GetKey("r"))
         {
@@ -128,6 +142,13 @@ public class PersonajeNivel8 : MonoBehaviour
             Camara.transform.position = new Vector3(72.5f, Camara.transform.position.y, -10);
         }
         //Camara.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+    }
+    void Muerte()
+    {
+        ani = 0;
+        timeEnd = 0;
+        rb.velocity = new Vector2(0, 0);
+        ChangeAnimation(ANI_QUIETO);
     }
 
     void Movimientos()
@@ -186,6 +207,7 @@ public class PersonajeNivel8 : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space) && cont > 0)
         {
+            audioSource.PlayOneShot(jumpClip);
             cont--;
             if(gameManager.saltoTriple > 0 && cont == 0){
                 gameManager.MenosSaltos();
@@ -201,23 +223,19 @@ public class PersonajeNivel8 : MonoBehaviour
         cont = salto;
         isGrounded = true;
 
-        if (other.gameObject.tag == "Enemy")
+        if (other.gameObject.tag == "Enemy" || other.gameObject.tag == "Limites")
         {
+            ani = 2;
+            audioSource.PlayOneShot(jumpClip);
             if (lastCheckpointPosition != null)
             {
                 transform.position = lastCheckpointPosition;
             }
             gameManager.PerderVida();
         }
-        if (other.gameObject.tag == "Limites")
-        {
-            if (lastCheckpointPosition != null)
-            {
-                transform.position = lastCheckpointPosition;
-            }
-        }
         if (other.gameObject.tag == "Moneda")
         {
+            audioSource.PlayOneShot(coinClip);
             gameManager.GanarPuntos(1);
             Destroy(other.gameObject);
         }
@@ -245,6 +263,11 @@ public class PersonajeNivel8 : MonoBehaviour
         if (other.gameObject.tag == "TP")
         {
             transform.position = new Vector3(43, -25.5f, 0);
+        }
+        if (other.gameObject.tag == "JetPack")
+        {
+            gameManager.SaveGame();
+            SceneManager.LoadScene(2);
         }
     }
     void OnTriggerEnter2D(Collider2D other)
