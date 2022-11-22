@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
+using TMPro;
+using UnityEngine.UI;
 public class PersonajeNivel2 : MonoBehaviour
 {
     public int velocity = 4, veloCorrer = 8, velSalto = 5, salto = 3;
@@ -12,6 +15,7 @@ public class PersonajeNivel2 : MonoBehaviour
     CapsuleCollider2D cc;
     public GameObject bala;
     public GameObject fuegoBala;
+    public GameObject golpe;
 
     const int ANI_QUIETO = 0;
     const int ANI_CAMINAR = 1;
@@ -48,6 +52,7 @@ public class PersonajeNivel2 : MonoBehaviour
             if (Input.GetKeyDown("z"))
             {
                 ChangeAnimation(ANI_ATAQUE);
+                Golpe();
             }
             else
             {
@@ -69,7 +74,7 @@ public class PersonajeNivel2 : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow))
         {
             sr.flipX = false;
-            dir = 2;
+            dir = 1.2f;
 
             if (Input.GetKey("x"))
             {
@@ -94,7 +99,7 @@ public class PersonajeNivel2 : MonoBehaviour
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             sr.flipX = true;
-            dir = -2;
+            dir = -1.2f;
 
             if (Input.GetKey("x"))
             {
@@ -126,6 +131,11 @@ public class PersonajeNivel2 : MonoBehaviour
             ChangeAnimation(ANI_SALTO);
             cont--;
         }
+    }
+    void Golpe(){
+        var golpePosition = transform.position + new Vector3(dir, -0.28f, 0);
+        var gb = Instantiate(golpe, golpePosition, Quaternion.identity);
+        var controller = gb.GetComponent<GolpeScript>();
     }
     void Gun()
     {
@@ -193,6 +203,10 @@ public class PersonajeNivel2 : MonoBehaviour
         {
             gameManager.GanarVida();
             Destroy(other.gameObject);
+        }
+        if (other.gameObject.tag == "TP")
+        {
+            SceneManager.LoadScene(4);
         }
     }
     void OnTriggerEnter2D(Collider2D other)//para reconocer el checkponit(transparente)

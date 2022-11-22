@@ -18,7 +18,7 @@ public class Nivel3Controller : MonoBehaviour
     public GameObject Limite;
     public GameObject Camara;
     public GameObject jet;
-    public GameObject jet2;
+    public GameObject jet2; 
 
     private void Awake()
     {
@@ -58,7 +58,7 @@ public class Nivel3Controller : MonoBehaviour
             {
                 Limite.transform.position = new Vector3(126.4f, 0.5f, 0);
                 Debug.Log("Pos2: " + PerX);
-                Camara.transform.position = new Vector3(PerX, 0, -10);
+                Camara.transform.position = new Vector3(215, 0, -10);
             }
 
             muerto = false;

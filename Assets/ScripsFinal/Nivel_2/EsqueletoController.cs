@@ -17,6 +17,8 @@ public class EsqueletoController : MonoBehaviour
     const int ANI_CAMINAR = 1;
     const int ANI_ATAQUE = 2;
     const int ANI_MUERTO = 3;
+    float dir = 1.2f;
+    public GameObject golpe;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -35,12 +37,14 @@ public class EsqueletoController : MonoBehaviour
         else if (ani == 2)
         {
             ChangeAnimation(ANI_ATAQUE);
+            Golpe();
             rb.velocity = new Vector2(0, rb.velocity.y);//hace que el zombie camine
             Debug.Log("Atacando");
             cont += Time.deltaTime;
             if (cont >= time)
             {
                 ani = 1;
+                dir *= -1;
                 velocity *= -1;
                 if (velocity > 0)
                     sr.flipX = true;
@@ -70,6 +74,19 @@ public class EsqueletoController : MonoBehaviour
         {
             cont = 0.0f;
             ani = 3;
+        }
+    }
+    void Golpe(){
+        var golpePosition = transform.position + new Vector3(dir, -0.28f, 0);
+        var gb = Instantiate(golpe, golpePosition, Quaternion.identity);
+        var controller = gb.GetComponent<GolpeScript>();
+    }
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.tag == "Bullet")
+        {
+            Destroy(other.gameObject);
+            Destroy(this.gameObject);
         }
     }
     private void ChangeAnimation(int a)

@@ -50,7 +50,8 @@ public class PersonajeNivel3 : MonoBehaviour
         {
             Movimientos();
         }
-        else if (ani == 1) {
+        else if (ani == 1)
+        {
             Libre();
         }
         else if (ani == 2)
@@ -99,7 +100,8 @@ public class PersonajeNivel3 : MonoBehaviour
         else if (gameManager.check == 2) transform.position = new Vector3(212f, -2, 0);
     }
 
-    void QuitarJetPack(){
+    void QuitarJetPack()
+    {
         ani = 0;
         ChangeAnimation(ANI_QUIETO);
         gameManager.inicio = false;
@@ -172,7 +174,8 @@ public class PersonajeNivel3 : MonoBehaviour
             if (other.gameObject.name == "Flag") gameManager.check = 1;
             else if (other.gameObject.name == "Flag2") gameManager.check = 2;
         }
-        if (other.gameObject.tag == "TP"){
+        if (other.gameObject.tag == "TP")
+        {
             SceneManager.LoadScene(2);  //Volver al nivel regular
         }
     }
