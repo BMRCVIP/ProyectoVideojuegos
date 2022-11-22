@@ -165,6 +165,7 @@ public class PersonajeNivel3 : MonoBehaviour
         {
             if (other.gameObject.name == "Abajo") ani = 2;
             else ani = 3;
+            gameManager.PerderVida();
         }
         if (other.gameObject.tag == "CheckPoint")
         {
