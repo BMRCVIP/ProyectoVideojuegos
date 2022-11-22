@@ -133,6 +133,7 @@ public class PersonajeNivel2 : MonoBehaviour
         }
     }
     void Golpe(){
+        
         var golpePosition = transform.position + new Vector3(dir, -0.28f, 0);
         var gb = Instantiate(golpe, golpePosition, Quaternion.identity);
         var controller = gb.GetComponent<GolpeScript>();
