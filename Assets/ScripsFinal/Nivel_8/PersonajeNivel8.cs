@@ -72,7 +72,7 @@ public class PersonajeNivel8 : MonoBehaviour
         if (ani == 0)
         {
             Movimientos();
-        }
+        }/*
         else if (ani == 3)
         {
             if (gameManager.lives <= 0)
@@ -84,12 +84,18 @@ public class PersonajeNivel8 : MonoBehaviour
                 ChangeAnimation(ANI_DANIO);
             }
             rb.velocity = new Vector2(0, 0);
+            Debug.Log(timeEnd);
             timeEnd += Time.deltaTime;
             if (timeEnd >= timemuerto) Muerte();
-        }
+        }*/
         if (Input.GetKey("r"))
         {
             gameManager.ReiniciarSave();
+            gameManager.LoadGame();
+        }
+        if (Input.GetKey("t"))
+        {
+            gameManager.PonerMonedas();
             gameManager.LoadGame();
         }
         if(gameManager.saltoTriple>0){
@@ -225,8 +231,8 @@ public class PersonajeNivel8 : MonoBehaviour
 
         if (other.gameObject.tag == "Enemy" || other.gameObject.tag == "Limites")
         {
-            ani = 2;
-            audioSource.PlayOneShot(jumpClip);
+            ani = 0;
+            audioSource.PlayOneShot(deadClip);
             if (lastCheckpointPosition != null)
             {
                 transform.position = lastCheckpointPosition;

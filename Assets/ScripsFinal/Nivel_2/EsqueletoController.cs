@@ -30,7 +30,6 @@ public class EsqueletoController : MonoBehaviour
     {
         if (ani == 1)
         {
-            Debug.Log("Caminando");
             ChangeAnimation(ANI_CAMINAR);
             rb.velocity = new Vector2(velocity, rb.velocity.y);//hace que el zombie camine
         }
@@ -39,7 +38,6 @@ public class EsqueletoController : MonoBehaviour
             ChangeAnimation(ANI_ATAQUE);
             Golpe();
             rb.velocity = new Vector2(0, rb.velocity.y);//hace que el zombie camine
-            Debug.Log("Atacando");
             cont += Time.deltaTime;
             if (cont >= time)
             {

@@ -11,7 +11,7 @@ public class Nivel2Controller : MonoBehaviour
     public Text scoreText;
     public Text livesText;
     public int score = 0;
-    private int lives = 3;
+    public int lives = 3;
     void Start()
     {
         
@@ -77,6 +77,27 @@ public class Nivel2Controller : MonoBehaviour
 
         GameData data = new GameData();
         data.Score = 0;
+        data.Live = 3;
+        data.Bonus = false;
+
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Serialize(file, data);
+        file.Close();
+        Debug.Log("Reiniciado");
+    }
+    
+    public void PonerMonedas()
+    {
+        var filePath = Application.persistentDataPath + "/guardar.dat";
+        FileStream file;
+
+        if (File.Exists(filePath))
+            file = File.OpenWrite(filePath);
+        else
+            file = File.Create(filePath);
+
+        GameData data = new GameData();
+        data.Score = 50;
         data.Live = 3;
         data.Bonus = false;
 

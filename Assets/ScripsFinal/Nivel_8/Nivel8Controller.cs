@@ -22,6 +22,14 @@ public class Nivel8Controller : MonoBehaviour
     {
 
     }
+    void Update()
+    {
+        if (lives < 0)
+        {
+            SceneManager.LoadScene(0);
+            ReiniciarSave();
+        }
+    }
 
     public void SaveGame()
     {
@@ -70,6 +78,26 @@ public class Nivel8Controller : MonoBehaviour
         saltoTriple = data.SaltoTriple;
 
         GanarPuntos(0);
+    }
+    public void PonerMonedas()
+    {
+        var filePath = Application.persistentDataPath + "/guardar.dat";
+        FileStream file;
+
+        if (File.Exists(filePath))
+            file = File.OpenWrite(filePath);
+        else
+            file = File.Create(filePath);
+
+        GameData data = new GameData();
+        data.Score = 50;
+        data.Live = 3;
+        data.Bonus = false;
+
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Serialize(file, data);
+        file.Close();
+        Debug.Log("Reiniciado");
     }
     public void ReiniciarSave()
     {

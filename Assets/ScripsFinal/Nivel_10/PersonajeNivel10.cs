@@ -84,17 +84,17 @@ public class PersonajeNivel10 : MonoBehaviour
         {
             Camara.transform.position = new Vector3(Camara.transform.position.x, 4.5f, -10);
         }
-        if (transform.position.x <= 12)
+        if (transform.position.x <= 14)
         {
-            if (transform.position.x <= -4.5f)
+            if (transform.position.x <= -7f)
             {
-                Camara.transform.position = new Vector3(-4.5f, Camara.transform.position.y, -10);
+                Camara.transform.position = new Vector3(-7f, Camara.transform.position.y, -10);
             }
             else Camara.transform.position = new Vector3(transform.position.x, Camara.transform.position.y, -10);
         }
         else
         {
-            Camara.transform.position = new Vector3(12, Camara.transform.position.y, -10);
+            Camara.transform.position = new Vector3(14, Camara.transform.position.y, -10);
         }
     }
 

@@ -34,12 +34,17 @@ public class Nivel3Controller : MonoBehaviour
     }
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(lives<0)
+        {
+            SceneManager.LoadScene(0);
+            ReiniciarSave();
+        }
         if (inicio) scrollSpeed = 4f;
         else scrollSpeed = 0;
         if (muerto)

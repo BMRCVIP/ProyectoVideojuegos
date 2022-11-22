@@ -56,6 +56,12 @@ public class PersonajeNivel2 : MonoBehaviour
     }
     void Update()
     {
+        if(gameManager.lives<0)
+        {
+            SceneManager.LoadScene(0);
+            gameManager.ReiniciarSave();
+            gameManager.LoadGame();
+        }
         if (gameManager.score >= 50)
         {
             ani = 3;
@@ -66,9 +72,9 @@ public class PersonajeNivel2 : MonoBehaviour
             ChangeAnimation(ANI_GUN);
             Gun();
         }
-        Debug.Log(darGolpe);
         if (darGolpe)
         {
+            Debug.Log(darGolpe);
             time += Time.deltaTime;
             if (time >= tiempoataque) Golpe();
         }
@@ -77,6 +83,7 @@ public class PersonajeNivel2 : MonoBehaviour
             gameManager.ReiniciarSave();
             gameManager.LoadGame();
         }
+        
     }
 
     void Movimientos()
@@ -206,6 +213,7 @@ public class PersonajeNivel2 : MonoBehaviour
             {
                 transform.position = lastCheckpointPosition;
             }
+            gameManager.PerderVida();
         }
         if (other.gameObject.tag == "Enemy")
         {

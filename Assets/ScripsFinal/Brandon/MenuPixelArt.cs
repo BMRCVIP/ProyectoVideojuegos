@@ -21,4 +21,9 @@ public class MenuPixelArt : MonoBehaviour
         Debug.Log("QUIT!");
         Application.Quit();
     }
+    public void menuPrincipal()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MenuPrincipal");
+    }   
 }
