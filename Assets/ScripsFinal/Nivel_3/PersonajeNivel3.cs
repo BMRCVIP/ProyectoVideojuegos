@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
+using UnityEngine.UI;
 
 public class PersonajeNivel3 : MonoBehaviour
 {
@@ -10,7 +13,6 @@ public class PersonajeNivel3 : MonoBehaviour
     Animator animator;
     Collider2D cl;
     public GameObject humo;
-    private Nivel3Controller gameManager;
 
 
     const int ANI_QUIETO = 0;
@@ -25,7 +27,9 @@ public class PersonajeNivel3 : MonoBehaviour
     const int ANI_OTHER = 12;
 
     int ani = 0, cont;
+    float timemuerto = 1.5f, timeEnd = 0;
     Vector3 lastCheckpointPosition;
+    private Nivel3Controller gameManager;
 
     void Start()
     {
@@ -36,6 +40,7 @@ public class PersonajeNivel3 : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         cl = GetComponent<Collider2D>();
+        gameManager.LoadGame();
     }
 
     // Update is called once per frame
@@ -43,26 +48,64 @@ public class PersonajeNivel3 : MonoBehaviour
     {
         if (ani == 0)
         {
-            if (Input.GetKeyDown("z"))
+            Movimientos();
+        }
+        else if (ani == 1)
+        {
+            Libre();
+        }
+        else if (ani == 2)
+        {
+            if (gameManager.lives <= 0)
             {
-                ChangeAnimation(ANI_ATAQUE);
+                ChangeAnimation(ANI_MUERTO);
             }
             else
             {
-                Movimientos();
+                ChangeAnimation(ANI_DANIO);
             }
+            gameManager.inicio = false;
+            rb.velocity = new Vector2(0, 2);
+            timeEnd += Time.deltaTime;
+            if (timeEnd >= timemuerto) Muerte();
         }
-        else if (ani == 1) Libre();
-
-        if(gameManager.check==2){
-            if(transform.position.x <= 213f){
-                gameManager.PerX=transform.position.x;
-                Debug.Log("Pos: " + gameManager.PerX + " - " + transform.position.x);
+        else if (ani == 3)
+        {
+            if (gameManager.lives <= 0)
+            {
+                ChangeAnimation(ANI_MUERTO);
             }
+            else
+            {
+                ChangeAnimation(ANI_DANIO);
+            }
+            gameManager.inicio = false;
+            rb.velocity = new Vector2(0, 0);
+            timeEnd += Time.deltaTime;
+            if (timeEnd >= timemuerto) Muerte();
         }
 
     }
 
+    void Muerte()
+    {
+        ani = 0;
+        timeEnd = 0;
+        gameManager.inicio = false;
+        gameManager.muerto = true;
+        rb.velocity = new Vector2(0, 0);
+        ChangeAnimation(ANI_QUIETO);
+        if (gameManager.check == 0) transform.position = new Vector3(-9.5f, -2, 0);
+        else if (gameManager.check == 1) transform.position = new Vector3(135.5f, -2, 0);
+        else if (gameManager.check == 2) transform.position = new Vector3(212f, -2, 0);
+    }
+
+    void QuitarJetPack()
+    {
+        ani = 0;
+        ChangeAnimation(ANI_QUIETO);
+        gameManager.inicio = false;
+    }
     void Movimientos()
     {
         if (Input.GetKey(KeyCode.RightArrow))
@@ -82,7 +125,6 @@ public class PersonajeNivel3 : MonoBehaviour
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
             ChangeAnimation(ANI_QUIETO);
-            ChangeAnimation(ANI_OTHER);
         }
         if (Input.GetKeyDown(KeyCode.Space) && cont > 0)
         {
@@ -114,21 +156,28 @@ public class PersonajeNivel3 : MonoBehaviour
 
 
     }
+
     void OnCollisionEnter2D(Collision2D other)
     {
         cont = salto;
 
         if (other.gameObject.tag == "Enemy" || other.gameObject.tag == "Limites")
         {
-            ani = 0;
-            gameManager.inicio = false;
-            gameManager.muerto = true;
-            rb.velocity = new Vector2(0, 0);
-            if(gameManager.check==0) transform.position = new Vector3(-9.5f, -2, 0);
-            else if(gameManager.check==1) transform.position = new Vector3(135.5f, -2, 0);
-            else if(gameManager.check==2) transform.position = new Vector3(212f, -2, 0);
+            if (other.gameObject.name == "Abajo") ani = 2;
+            else ani = 3;
         }
-
+        if (other.gameObject.tag == "CheckPoint")
+        {
+            Debug.Log("CheckPoint");
+            QuitarJetPack();
+            Destroy(other.gameObject);
+            if (other.gameObject.name == "Flag") gameManager.check = 1;
+            else if (other.gameObject.name == "Flag2") gameManager.check = 2;
+        }
+        if (other.gameObject.tag == "TP")
+        {
+            SceneManager.LoadScene(2);  //Volver al nivel regular
+        }
     }
     void OnTriggerEnter2D(Collider2D other)//para reconocer el checkponit(transparente)
     {
@@ -139,22 +188,6 @@ public class PersonajeNivel3 : MonoBehaviour
             other.GetComponent<Collider2D>().enabled = false;
             other.GetComponent<SpriteRenderer>().enabled = false;
             //Destroy(other.gameObject);
-        }
-        if (other.gameObject.name == "Flag")
-        {
-            ani = 0;
-            lastCheckpointPosition = transform.position;
-            other.GetComponent<Collider2D>().enabled = false;
-            gameManager.inicio = false;
-            gameManager.check = 1;
-        }
-        if (other.gameObject.name == "Flag2")
-        {
-            ani = 0;
-            lastCheckpointPosition = transform.position;
-            other.GetComponent<Collider2D>().enabled = false;
-            gameManager.inicio = false;
-            gameManager.check = 2;
         }
     }
     private void ChangeAnimation(int a)

@@ -89,9 +89,9 @@ public class PersonajeNivel8 : MonoBehaviour
         {
             if (transform.position.y <= 5)
             {
-                if (transform.position.y <= -4)
+                if (transform.position.y <= -5)
                 {
-                    Camara.transform.position = new Vector3(Camara.transform.position.x, -4, -10);
+                    Camara.transform.position = new Vector3(Camara.transform.position.x, -5, -10);
                 }
                 else Camara.transform.position = new Vector3(Camara.transform.position.x, transform.position.y, -10);
             }
@@ -115,17 +115,17 @@ public class PersonajeNivel8 : MonoBehaviour
                 Camara.transform.position = new Vector3(Camara.transform.position.x, -15, -10);
             }
         }
-        if (transform.position.x <= 69)
+        if (transform.position.x <= 72.5f)
         {
-            if (transform.position.x <= -68)
+            if (transform.position.x <= -71)
             {
-                Camara.transform.position = new Vector3(-68, Camara.transform.position.y, -10);
+                Camara.transform.position = new Vector3(-71, Camara.transform.position.y, -10);
             }
             else Camara.transform.position = new Vector3(transform.position.x, Camara.transform.position.y, -10);
         }
         else
         {
-            Camara.transform.position = new Vector3(69, Camara.transform.position.y, -10);
+            Camara.transform.position = new Vector3(72.5f, Camara.transform.position.y, -10);
         }
         //Camara.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
     }
@@ -186,13 +186,12 @@ public class PersonajeNivel8 : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space) && cont > 0)
         {
-            Debug.Log(gameManager.saltoTriple + "-" + cont);
+            cont--;
             if(gameManager.saltoTriple > 0 && cont == 0){
                 gameManager.MenosSaltos();
             }
             rb.AddForce(new Vector2(0, velSalto), ForceMode2D.Impulse);
             ChangeAnimation(ANI_SALTO);
-            cont--;
         }
         if(onLadder) ChangeAnimation(ANI_TREPAR);
     }
@@ -231,6 +230,7 @@ public class PersonajeNivel8 : MonoBehaviour
         {
             gameManager.MasSaltos();
             gameManager.PrintSaltoInScreen();
+            cont = 3;
             Destroy(other.gameObject);
         }
         if (other.gameObject.name == "Shield")
